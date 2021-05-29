@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatelessWidget {
-  String email = '';
-  String password = '';
-  String name = '';
-  String address = '';
-  String number = '';
+  String email;
+  String password;
+  String name;
+  String address;
+  String number;
 
   Widget _body(BuildContext context) {
     return Column(
@@ -104,7 +103,7 @@ class RegisterPage extends StatelessWidget {
                             child: Container(
                                 width: double.infinity,
                                 child: Text(
-                                  'Registra-se',
+                                  'Registrar-se',
                                   textAlign: TextAlign.center,
                                 )),
                           )
