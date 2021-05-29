@@ -1,7 +1,7 @@
 class User {
   String name;
   String street;
-  int streetNumber;
+  String streetNumber;
   String email;
   String password;
 

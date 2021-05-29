@@ -1,142 +1,197 @@
+import 'package:devpizza/bloc/user_bloc.dart';
+import 'package:devpizza/events/add_user.dart';
+import 'package:devpizza/model/user.dart';
+
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RegisterPage extends StatelessWidget {
-  String email;
-  String password;
-  String name;
-  String address;
-  String number;
+class UserForm extends StatefulWidget {
+  final User user;
+  final int userIndex;
 
-  Widget _body(BuildContext context) {
-    return Column(
-      children: [
-        SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/Steve_Pizza.png',
-                    width: 200,
-                    height: 200,
-                  ),
-                  Container(
-                    height: 20,
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12, right: 12, top: 20, bottom: 12),
-                      child: Column(
-                        children: [
-                          TextField(
-                            onChanged: (text) {
-                              name = text;
-                            },
-                            keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
-                              labelText: 'Nome',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            onChanged: (text) {
-                              address = text;
-                            },
-                            keyboardType: TextInputType.streetAddress,
-                            decoration: InputDecoration(
-                              labelText: 'Endereço',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            onChanged: (text) {
-                              number = text;
-                            },
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Número',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            onChanged: (text) {
-                              email = text;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            onChanged: (text) {
-                              password = text;
-                            },
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.deepPurple,
-                            onPressed: () {
-                              //aqui vem o código para adicionar um novo usuário
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
-                                  ));
-                            },
-                            child: Container(
-                                width: double.infinity,
-                                child: Text(
-                                  'Registrar-se',
-                                  textAlign: TextAlign.center,
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
+  UserForm({this.user, this.userIndex});
+
+  @override
+  State<StatefulWidget> createState() {
+    return UserFormState();
+  }
+}
+
+class UserFormState extends State<UserForm> {
+  String _name;
+  String _street;
+  String _streetNumber;
+  String _email;
+  String _password;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Widget _buildName() {
+    return TextFormField(
+      initialValue: _name,
+      decoration: InputDecoration(labelText: 'Nome'),
+      maxLength: 40,
+      style: TextStyle(fontSize: 28),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Nome é obrigatório!';
+        }
+        return null;
+      },
+      onSaved: (String value) {
+        _name = value;
+      },
     );
+  }
+
+  Widget _buildStreet() {
+    return TextFormField(
+      initialValue: _street,
+      decoration: InputDecoration(labelText: 'Endereço'),
+      style: TextStyle(fontSize: 28),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Endereço é obrigatório!';
+        }
+        return null;
+      },
+      onSaved: (String value) {
+        _street = value;
+      },
+    );
+  }
+
+  Widget _buildStreetNumber() {
+    return TextFormField(
+      initialValue: _streetNumber,
+      decoration: InputDecoration(labelText: 'Número'),
+      style: TextStyle(fontSize: 28),
+      validator: (String value) {
+        int number = int.tryParse(value);
+
+        if (number == null || number <= 0) {
+          return 'Número da residência é obrigatório!';
+        }
+        return null;
+      },
+      onSaved: (String value) {
+        _streetNumber = value;
+      },
+    );
+  }
+
+  Widget _buildEmail() {
+    return TextFormField(
+      initialValue: _email,
+      decoration: InputDecoration(labelText: 'Email'),
+      maxLength: 40,
+      style: TextStyle(fontSize: 28),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Email é obrigatório!';
+        }
+        return null;
+      },
+      onSaved: (String value) {
+        _email = value;
+      },
+    );
+  }
+
+  Widget _buildPassword() {
+    return TextFormField(
+      initialValue: _password,
+      decoration: InputDecoration(labelText: 'Senha'),
+      maxLength: 40,
+      style: TextStyle(fontSize: 28),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Senha é obrigatória!';
+        }
+        return null;
+      },
+      onSaved: (String value) {
+        _password = value;
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.user != null) {
+      _name = widget.user.name;
+      _street = widget.user.street;
+      _streetNumber = widget.user.streetNumber;
+      _email = widget.user.email;
+      _password = widget.user.password;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            'assets/images/background.jpg',
-            fit: BoxFit.cover,
+      appBar: AppBar(title: Text("Registrar-se")),
+      body: Container(
+        margin: EdgeInsets.all(24),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildName(),
+              _buildEmail(),
+              _buildPassword(),
+              _buildStreet(),
+              _buildStreetNumber(),
+              widget.user == null
+                  ? RaisedButton(
+                      child: Text(
+                        'Cadastrar-se',
+                        style: TextStyle(color: Colors.blue, fontSize: 16),
+                      ),
+                      onPressed: () {
+                        if (!_formKey.currentState.validate()) {
+                          return;
+                        }
+
+                        _formKey.currentState.save();
+
+                        Navigator.pop(context);
+                      },
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        RaisedButton(
+                          child: Text(
+                            "Update",
+                            style: TextStyle(color: Colors.blue, fontSize: 16),
+                          ),
+                          onPressed: () {
+                            if (!_formKey.currentState.validate()) {
+                              print("form");
+                              return;
+                            }
+
+                            _formKey.currentState.save();
+
+                            Navigator.pop(context);
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text(
+                            "Cancelar",
+                            style: TextStyle(color: Colors.red, fontSize: 16),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+            ],
           ),
         ),
-        Container(
-          color: Colors.purple.withOpacity(0.3),
-        ),
-        _body(context),
-      ],
-    ));
+      ),
+    );
   }
 }
