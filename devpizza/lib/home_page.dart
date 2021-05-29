@@ -126,6 +126,7 @@ class HomePage extends StatelessWidget {
 
   Widget _shoopingCart(BuildContext context) {
     return FloatingActionButton(
+      heroTag: null,
       onPressed: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => cartItens(context)));

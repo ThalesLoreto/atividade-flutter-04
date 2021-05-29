@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
-  String email = '';
-  String password = '';
+  String email;
+  String password;
 
   Widget _body(BuildContext context) {
     return Column(
@@ -80,7 +80,7 @@ class LoginPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => RegisterPage(),
+                                    builder: (context) => UserForm(),
                                   ));
                             },
                             child: Container(
