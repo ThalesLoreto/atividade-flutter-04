@@ -10,7 +10,6 @@ class DatabaseProvider {
   static const String COLUMN_PASSWORD = 'password';
   static const String COLUMN_NAME = 'name';
   static const String COLUMN_STREET = 'street';
-  static const String COLUMN_STREETNUMBER = 'streetNumber';
 
   DatabaseProvider._();
   static final DatabaseProvider db = DatabaseProvider._();
@@ -18,8 +17,6 @@ class DatabaseProvider {
   Database _database;
 
   Future<Database> get database async {
-    print("Database getter call");
-
     if (_database != null) {
       return _database;
     }
@@ -42,8 +39,7 @@ class DatabaseProvider {
           "$COLUMN_EMAIL TEXT,"
           "$COLUMN_PASSWORD TEXT,"
           "$COLUMN_NAME TEXT,"
-          "$COLUMN_STREET TEXT,"
-          "$COLUMN_STREETNUMBER TEXT"
+          "$COLUMN_STREET TEXT"
           ")",
         );
       },
@@ -54,13 +50,7 @@ class DatabaseProvider {
     final db = await database;
     var users = await db.query(
       TABLE_USER,
-      columns: [
-        COLUMN_ID,
-        COLUMN_EMAIL,
-        COLUMN_NAME,
-        COLUMN_STREET,
-        COLUMN_STREETNUMBER
-      ],
+      columns: [COLUMN_ID, COLUMN_EMAIL, COLUMN_NAME, COLUMN_STREET],
     );
 
     List<User> userList = List<User>();
@@ -78,5 +68,15 @@ class DatabaseProvider {
     user.id = await db.insert(TABLE_USER, user.toMap());
 
     return user;
+  }
+
+  Future<int> update(User user) async {
+    final db = await database;
+    return await db.update(
+      TABLE_USER,
+      user.toMap(),
+      where: "id = ?",
+      whereArgs: [user.id],
+    );
   }
 }

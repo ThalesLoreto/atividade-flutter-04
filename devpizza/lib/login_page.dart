@@ -106,20 +106,21 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            'assets/images/background.jpg',
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-          color: Colors.purple.withOpacity(0.3),
-        ),
-        _body(context),
-      ],
-    ));
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Image.asset(
+                'assets/images/background.jpg',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Container(
+              color: Colors.purple.withOpacity(0.3),
+            ),
+            _body(context),
+          ],
+        ));
   }
 }

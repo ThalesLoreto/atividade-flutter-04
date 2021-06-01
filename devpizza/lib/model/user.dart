@@ -4,17 +4,10 @@ class User {
   int id;
   String name;
   String street;
-  String streetNumber;
   String email;
   String password;
 
-  User(
-      {this.id,
-      this.name,
-      this.email,
-      this.street,
-      this.streetNumber,
-      this.password});
+  User({this.id, this.name, this.email, this.street, this.password});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -23,7 +16,6 @@ class User {
       DatabaseProvider.COLUMN_EMAIL: email,
       DatabaseProvider.COLUMN_PASSWORD: password,
       DatabaseProvider.COLUMN_STREET: street,
-      DatabaseProvider.COLUMN_STREETNUMBER: streetNumber,
     };
 
     if (id != null) {
@@ -39,6 +31,5 @@ class User {
     email = map[DatabaseProvider.COLUMN_EMAIL];
     password = map[DatabaseProvider.COLUMN_PASSWORD];
     street = map[DatabaseProvider.COLUMN_STREET];
-    streetNumber = map[DatabaseProvider.COLUMN_STREETNUMBER];
   }
 }

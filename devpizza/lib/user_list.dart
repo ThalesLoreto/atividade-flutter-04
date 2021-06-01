@@ -1,6 +1,7 @@
 import 'package:devpizza/bloc/user_bloc.dart';
 import 'package:devpizza/db/database_provider.dart';
 import 'package:devpizza/events/set_user.dart';
+import 'package:devpizza/home_page.dart';
 import 'package:devpizza/model/user.dart';
 import 'package:devpizza/register_page.dart';
 import 'package:flutter/material.dart';
@@ -51,13 +52,9 @@ class _UserListState extends State<UserList> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building entire user list scaffold");
     return Scaffold(
       appBar: AppBar(
         title: Text("Perfil"),
-        leading: Image.asset(
-          'assets/images/Steve_Pizza.png',
-        ),
       ),
       body: Container(
         padding: EdgeInsets.all(8),
@@ -66,15 +63,13 @@ class _UserListState extends State<UserList> {
           builder: (context, userList) {
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                print("userList: $userList");
-
                 User user = userList[index];
                 return Card(
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16),
                     title: Text(user.name, style: TextStyle(fontSize: 26)),
                     subtitle: Text(
-                      "Email: ${user.email}\nEndereço: ${user.street}\nNúmero: ${user.streetNumber}",
+                      "Email: ${user.email}\nEndereço: ${user.street}",
                       style: TextStyle(fontSize: 20),
                     ),
                     onTap: () => showUserDialog(context, user, index),
@@ -85,13 +80,6 @@ class _UserListState extends State<UserList> {
             );
           },
           listener: (BuildContext context, userList) {},
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) => UserForm()),
         ),
       ),
     );

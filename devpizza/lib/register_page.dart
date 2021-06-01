@@ -1,6 +1,7 @@
 import 'package:devpizza/bloc/user_bloc.dart';
 import 'package:devpizza/db/database_provider.dart';
 import 'package:devpizza/events/add_user.dart';
+import 'package:devpizza/events/update_user.dart';
 import 'package:devpizza/model/user.dart';
 
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ class UserForm extends StatefulWidget {
 class UserFormState extends State<UserForm> {
   String _name;
   String _street;
-  String _streetNumber;
   String _email;
   String _password;
 
@@ -58,25 +58,6 @@ class UserFormState extends State<UserForm> {
       },
       onSaved: (String value) {
         _street = value;
-      },
-    );
-  }
-
-  Widget _buildStreetNumber() {
-    return TextFormField(
-      initialValue: _streetNumber,
-      decoration: InputDecoration(labelText: 'Número'),
-      style: TextStyle(fontSize: 16),
-      validator: (String value) {
-        int number = int.tryParse(value);
-
-        if (number == null || number <= 0) {
-          return 'Número da residência é obrigatório!';
-        }
-        return null;
-      },
-      onSaved: (String value) {
-        _streetNumber = value;
       },
     );
   }
@@ -121,7 +102,6 @@ class UserFormState extends State<UserForm> {
     if (widget.user != null) {
       _name = widget.user.name;
       _street = widget.user.street;
-      _streetNumber = widget.user.streetNumber;
       _email = widget.user.email;
       _password = widget.user.password;
     }
@@ -130,6 +110,7 @@ class UserFormState extends State<UserForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Registrar-se"),
         backgroundColor: Colors.purple,
@@ -147,8 +128,6 @@ class UserFormState extends State<UserForm> {
               _buildPassword(),
               SizedBox(height: 16),
               _buildStreet(),
-              SizedBox(height: 16),
-              _buildStreetNumber(),
               SizedBox(height: 16),
               widget.user == null
                   ? RaisedButton(
@@ -168,7 +147,6 @@ class UserFormState extends State<UserForm> {
                           email: _email,
                           password: _password,
                           street: _street,
-                          streetNumber: _streetNumber,
                         );
 
                         DatabaseProvider.db.insert(user).then(
@@ -197,6 +175,19 @@ class UserFormState extends State<UserForm> {
                             }
 
                             _formKey.currentState.save();
+
+                            User food = User(
+                              name: _name,
+                              email: _email,
+                              street: _street,
+                            );
+
+                            DatabaseProvider.db.update(widget.user).then(
+                                  (storedFood) =>
+                                      BlocProvider.of<UserBloc>(context).add(
+                                    UpdateUser(widget.userIndex, food),
+                                  ),
+                                );
 
                             Navigator.pop(context);
                           },
