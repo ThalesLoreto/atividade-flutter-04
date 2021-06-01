@@ -1,4 +1,5 @@
 import 'package:devpizza/bloc/user_bloc.dart';
+import 'package:devpizza/db/database_provider.dart';
 import 'package:devpizza/events/add_user.dart';
 import 'package:devpizza/model/user.dart';
 
@@ -31,7 +32,7 @@ class UserFormState extends State<UserForm> {
       initialValue: _name,
       decoration: InputDecoration(labelText: 'Nome'),
       maxLength: 40,
-      style: TextStyle(fontSize: 28),
+      style: TextStyle(fontSize: 16),
       validator: (String value) {
         if (value.isEmpty) {
           return 'Nome é obrigatório!';
@@ -48,7 +49,7 @@ class UserFormState extends State<UserForm> {
     return TextFormField(
       initialValue: _street,
       decoration: InputDecoration(labelText: 'Endereço'),
-      style: TextStyle(fontSize: 28),
+      style: TextStyle(fontSize: 16),
       validator: (String value) {
         if (value.isEmpty) {
           return 'Endereço é obrigatório!';
@@ -65,7 +66,7 @@ class UserFormState extends State<UserForm> {
     return TextFormField(
       initialValue: _streetNumber,
       decoration: InputDecoration(labelText: 'Número'),
-      style: TextStyle(fontSize: 28),
+      style: TextStyle(fontSize: 16),
       validator: (String value) {
         int number = int.tryParse(value);
 
@@ -84,8 +85,7 @@ class UserFormState extends State<UserForm> {
     return TextFormField(
       initialValue: _email,
       decoration: InputDecoration(labelText: 'Email'),
-      maxLength: 40,
-      style: TextStyle(fontSize: 28),
+      style: TextStyle(fontSize: 16),
       validator: (String value) {
         if (value.isEmpty) {
           return 'Email é obrigatório!';
@@ -102,8 +102,7 @@ class UserFormState extends State<UserForm> {
     return TextFormField(
       initialValue: _password,
       decoration: InputDecoration(labelText: 'Senha'),
-      maxLength: 40,
-      style: TextStyle(fontSize: 28),
+      style: TextStyle(fontSize: 16),
       validator: (String value) {
         if (value.isEmpty) {
           return 'Senha é obrigatória!';
@@ -131,7 +130,10 @@ class UserFormState extends State<UserForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Registrar-se")),
+      appBar: AppBar(
+        title: Text("Registrar-se"),
+        backgroundColor: Colors.purple,
+      ),
       body: Container(
         margin: EdgeInsets.all(24),
         child: Form(
@@ -141,14 +143,18 @@ class UserFormState extends State<UserForm> {
             children: <Widget>[
               _buildName(),
               _buildEmail(),
+              SizedBox(height: 16),
               _buildPassword(),
+              SizedBox(height: 16),
               _buildStreet(),
+              SizedBox(height: 16),
               _buildStreetNumber(),
+              SizedBox(height: 16),
               widget.user == null
                   ? RaisedButton(
                       child: Text(
                         'Cadastrar-se',
-                        style: TextStyle(color: Colors.blue, fontSize: 16),
+                        style: TextStyle(color: Colors.purple, fontSize: 16),
                       ),
                       onPressed: () {
                         if (!_formKey.currentState.validate()) {
@@ -156,6 +162,21 @@ class UserFormState extends State<UserForm> {
                         }
 
                         _formKey.currentState.save();
+
+                        User user = User(
+                          name: _name,
+                          email: _email,
+                          password: _password,
+                          street: _street,
+                          streetNumber: _streetNumber,
+                        );
+
+                        DatabaseProvider.db.insert(user).then(
+                              (storedUser) =>
+                                  BlocProvider.of<UserBloc>(context).add(
+                                AddUser(storedUser),
+                              ),
+                            );
 
                         Navigator.pop(context);
                       },
@@ -165,8 +186,9 @@ class UserFormState extends State<UserForm> {
                       children: <Widget>[
                         RaisedButton(
                           child: Text(
-                            "Update",
-                            style: TextStyle(color: Colors.blue, fontSize: 16),
+                            "Atualizar",
+                            style:
+                                TextStyle(color: Colors.purple, fontSize: 16),
                           ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {

@@ -1,16 +1,23 @@
+import 'package:devpizza/bloc/user_bloc.dart';
+import 'package:devpizza/user_list.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final appTitle = 'DevPizza';
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: appTitle,
-      //home: HomePage(title: appTitle),
-      home: LoginPage(),
+    return BlocProvider<UserBloc>(
+      create: (context) => UserBloc(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Sqflite Tutorial',
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+        ),
+        home: UserList(),
+      ),
     );
   }
 }

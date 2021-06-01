@@ -1,4 +1,5 @@
 import 'package:devpizza/login_page.dart';
+import 'package:devpizza/user_list.dart';
 import 'package:flutter/material.dart';
 import './menu_data.dart';
 
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
               // ...
               // Then close the drawer
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => perfil(context)));
+                  MaterialPageRoute(builder: (context) => UserList())); // TODO
             },
           ),
           ListTile(
@@ -263,27 +264,7 @@ Widget cardBottom(data) {
     ),
   ));
 }
-//-------------------------------------------------------Tela de Perfil-------------------------------
 
-Widget perfil(context) {
-  return (Scaffold(
-    appBar: AppBar(
-      title: Text("Perfil"),
-      backgroundColor: Colors.purple,
-    ),
-    body: Stack(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            'assets/images/background.jpg',
-            fit: BoxFit.cover,
-          ),
-        )
-      ],
-    ),
-  ));
-}
 //-------------------------------------------------------Tela de Pedidos-------------------------------
 
 Widget pedidos(context) {
